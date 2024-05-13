@@ -1,0 +1,53 @@
+const moment = require('moment-jalaali')
+const { query } = require('../helpers/database')
+
+exports.login = async (_event, data) => {
+  try {
+    const res = await query('SELECT * FROM users WHERE username = $1 AND password = $2', [
+      data.username,
+      data.password,
+    ])
+    if (res.rows.length > 0) {
+      const recentActivity = await query(
+        'SELECT * FROM users_data WHERE user_id = $1 ORDER BY created_at DESC LIMIT 4',
+        [res.rows[0].id]
+      )
+      let count = 0
+      recentActivity.rows.forEach((activity) => {
+        if (moment(activity.created_at).jDayOfYear() === moment().jDayOfYear()) count++
+      })
+      if (count === 4) return { success: false }
+      return {
+        success: true,
+        user: res.rows[0],
+        event: (recentActivity.rows[0]?.event === 1 ? 2 : 1) ?? 1,
+      }
+    }
+    return { success: false }
+  } catch (e) {
+    console.error(e)
+    return { error: 'خطای سرور' }
+  }
+}
+
+exports.enter = async (_event, userId) => {
+  try {
+    await query('INSERT INTO users_data (event, user_id) VALUES ($1, $2)', [1, userId])
+    return { success: true }
+  } catch (e) {
+    console.error(e)
+  }
+}
+
+exports.exit = async (_event, userId) => {
+  try {
+    await query('INSERT INTO users_data (event, created_at, user_id) VALUES ($1, $2, $3)', [
+      2,
+      new Date(),
+      userId,
+    ])
+    return { success: true }
+  } catch (e) {
+    console.error(e)
+  }
+}

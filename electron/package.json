@@ -1,0 +1,17 @@
+{
+  "name": "Silicontech-Project",
+  "version": "1.0.0",
+  "main": "main.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron src/main.js"
+  },
+  "devDependencies": {
+    "electron": "^30.0.2"
+  },
+  "dependencies": {
+    "moment-jalaali": "^0.10.0",
+    "pg": "^8.11.5",
+    "sqlite3": "^5.1.7"
+  }
+}
