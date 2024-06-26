@@ -32,7 +32,11 @@ exports.login = async (_event, data) => {
 
 exports.enter = async (_event, userId) => {
   try {
-    await query('INSERT INTO users_data (event, user_id) VALUES ($1, $2)', [1, userId])
+    await query('INSERT INTO users_data (event, user_id, created_at) VALUES ($1, $2, $3)', [
+      1,
+      userId,
+      new Date().toLocaleString(),
+    ])
     return { success: true }
   } catch (e) {
     console.error(e)
@@ -43,7 +47,7 @@ exports.exit = async (_event, userId) => {
   try {
     await query('INSERT INTO users_data (event, created_at, user_id) VALUES ($1, $2, $3)', [
       2,
-      new Date(),
+      new Date().toLocaleString(),
       userId,
     ])
     return { success: true }

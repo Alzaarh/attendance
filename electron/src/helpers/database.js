@@ -23,7 +23,7 @@ exports.createDatabase = async () => {
     CREATE TABLE IF NOT EXISTS users_data (
       id UUID DEFAULT gen_random_uuid(),
       event INT NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      created_at TIMESTAMP NOT NULL,
       user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
       PRIMARY KEY (id)
     )`)
