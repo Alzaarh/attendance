@@ -1,15 +1,22 @@
-import { Login } from "./routes/login";
-import { AuthContext } from "./auth-context";
-import { useState } from "react";
+import { useState } from 'react'
+import { Outlet } from 'react-router-dom'
 
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+import { Login } from './routes/login'
+import { AuthContext } from './stores/auth-context'
+
+export function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  if (!isLoggedIn)
+    return (
+      <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+        <Login />
+      </AuthContext.Provider>
+    )
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-      {!isLoggedIn ? <Login /> : <div>Dashboard</div>}
+      <Outlet />
     </AuthContext.Provider>
-  );
+  )
 }
-
-export default App;

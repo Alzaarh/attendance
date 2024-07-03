@@ -1,12 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: IranSans;
-  src: url("./assets/fonts/IRANYekanXFaNum-Regular.ttf");
+  src: url('./assets/fonts/IRANYekanXFaNum-Regular.ttf');
   font-weight: 400;
 }
 
 @font-face {
   font-family: IranSans;
-  src: url("./assets/fonts/IRANSansWeb\(FaNum\)_Medium.ttf");
+  src: url('./assets/fonts/IRANSansWeb\(FaNum\)_Medium.ttf');
   font-weight: 500;
 }
 
@@ -19,6 +23,15 @@
 
 body {
   font-family: IranSans, sans-serif;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  padding: 1rem;
+}
+a:hover {
+  color: #415a77;
 }
 
 .label {
@@ -53,6 +66,13 @@ body {
 .button:hover {
   opacity: 0.9;
 }
+.icon {
+  background-color: transparent;
+  color: inherit;
+}
+.icon:hover {
+  background-color: #edf2f4;
+}
 
 .login {
   display: flex;
@@ -79,4 +99,22 @@ body {
 
 .login-form .button {
   margin-top: 1.5rem;
+}
+
+.navbar {
+  /* background: blue; */
+  padding: 1.5rem;
+  max-width: 1024px;
+  margin: 0 auto;
+}
+
+.navbar > ul {
+  display: flex;
+  gap: 4rem;
+  list-style: none;
+  font-size: 1.25rem;
+}
+
+.navbar > ul > li:last-child {
+  margin-right: auto;
 }

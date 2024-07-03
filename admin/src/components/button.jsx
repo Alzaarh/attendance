@@ -1,7 +1,7 @@
-export const Button = ({ children, ...props }) => {
+export const Button = ({ children, variant = '', ...props }) => {
   return (
-    <button {...props} className="button">
+    <button {...props} className={`button ${variant}`}>
       {children}
     </button>
-  );
-};
+  )
+}
