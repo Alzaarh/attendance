@@ -14,6 +14,8 @@ router.post(
     body('username').isString().notEmpty(),
     body('name').isString().notEmpty(),
     body('password').isString().notEmpty(),
+    body('startHour').isString().optional(),
+    body('endHour').isString().optional(),
     validate,
   ],
   create

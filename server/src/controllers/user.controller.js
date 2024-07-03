@@ -9,15 +9,18 @@ export const find = asyncHandle(async (_req, res) => {
 })
 
 export const create = asyncHandle(async (req, res) => {
-  if (
-    (await pool.query('SELECT id FROM users WHERE username = $1', [req.body.username])).rowCount > 0
+  const user = await pool.query('SELECT id FROM users WHERE username = $1', [req.body.username])
+  if (user.rowCount > 0) return res.status(400).send({ error: 'نام کاربری قبلا استفاده شده است.' })
+  await pool.query(
+    'INSERT INTO users (username, name, password, startHour, endHour) VALUES ($1, $2, $3, $4, $5)',
+    [
+      req.body.username,
+      req.body.name,
+      await hash(req.body.password, 12),
+      req.body.startHour ?? '8:00',
+      req.body.endHour ?? '16:00',
+    ]
   )
-    return res.status(400).send({ error: 'نام کاربری قبلا استفاده شده است.' })
-  await pool.query('INSERT INTO users (username, name, password) VALUES ($1, $2, $3)', [
-    req.body.username,
-    req.body.name,
-    await hash(req.body.password, 12),
-  ])
   res.status(201).send({ data: 'Success' })
 })
 
