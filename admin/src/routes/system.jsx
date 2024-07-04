@@ -1,60 +1,72 @@
-import { useEffect, useState } from "react";
-import { Skeleton } from "../components/shadcn/skeleton";
-import axios from "axios";
-import { BASE_URL } from "../constants/config";
-import { CalendarCheck2, CalendarClock, CalendarX2 } from "lucide-react";
+import { useEffect, useState } from 'react'
+import { Skeleton } from '../components/shadcn/skeleton'
+import axios from 'axios'
+import { BASE_URL } from '../constants/config'
+import { CalendarCheck2, CalendarClock, CalendarX2 } from 'lucide-react'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../components/shadcn/tooltip";
-import DatePicker from "react-multi-date-picker";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
-import InputIcon from "react-multi-date-picker/components/input_icon";
-import { Button } from "../components/button";
-import moment from "moment-jalaali";
+} from '../components/shadcn/tooltip'
+import DatePicker from 'react-multi-date-picker'
+import persian from 'react-date-object/calendars/persian'
+import persian_fa from 'react-date-object/locales/persian_fa'
+import InputIcon from 'react-multi-date-picker/components/input_icon'
+import { Button } from '../components/button'
+import moment from 'moment-jalaali'
+import { useNavigate } from 'react-router-dom'
 
 export function System() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false)
+  const [users, setUsers] = useState([])
   const [date, setDate] = useState(
-    moment().subtract(1, "days").format("jYYYY/jMM/jDD")
-  );
+    moment().subtract(1, 'days').format('jYYYY/jMM/jDD')
+  )
+
+  const navigate = useNavigate()
 
   function convertToHourMinuteFormat(minutes) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    const formattedTime = `${hours}:${mins.toString().padStart(2, "0")}:00`;
-    return formattedTime;
+    const hours = Math.floor(minutes / 60)
+    const mins = minutes % 60
+    const formattedTime = `${hours}:${mins.toString().padStart(2, '0')}:00`
+    return formattedTime
   }
 
   function getUser() {
-    setIsLoading(true);
+    setIsLoading(true)
     axios
       .get(`${BASE_URL}/system`, {
         params: {
-          date: moment(date, "jYYYY-jMM-jDD").format("YYYY-MM-DD"),
+          date: moment(date, 'jYYYY-jMM-jDD').format('YYYY-MM-DD'),
         },
       })
       .then((data) => {
-        setUsers(data.data.data);
+        setUsers(data.data.data)
       })
-      .catch((e) => console.error(e))
-      .finally(() => setIsLoading(false));
+      .catch()
+      .finally(() => setIsLoading(false))
   }
 
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
     axios
-      .get(`${BASE_URL}/system`)
-      .then((data) => {
-        setUsers(data.data.data);
+      .get(`${BASE_URL}/system`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
-      .catch((e) => console.error(e))
-      .finally(() => setIsLoading(false));
-  }, []);
+      .then((data) => {
+        setUsers(data.data.data)
+      })
+      .catch((e) => {
+        if (e.response.status === 401) {
+          navigate('/login')
+        }
+      }
+    )
+      .finally(() => setIsLoading(false))
+  }, [])
 
   return (
     <div className="mx-auto max-w-screen-lg mt-14">
@@ -66,22 +78,22 @@ export function System() {
             setDate(`${value.year}-${value.month}-${value.day}`)
           }
           calendar={persian}
-          maxDate={moment().subtract(1, "days").format("jYYYY/jMM/jDD")}
+          maxDate={moment().subtract(1, 'days').format('jYYYY/jMM/jDD')}
           locale={persian_fa}
           render={
             <InputIcon
               style={{
-                height: "34px",
-                width: "150px",
-                borderRadius: "8px",
-                fontSize: "16px",
-                padding: "3px 10px",
+                height: '34px',
+                width: '150px',
+                borderRadius: '8px',
+                fontSize: '16px',
+                padding: '3px 10px',
               }}
             />
           }
           calendarPosition="bottom-right"
         />
-        <Button variants={"ghost"} onClick={() => getUser()}>
+        <Button variants={'ghost'} onClick={() => getUser()}>
           ثبت
         </Button>
       </div>
@@ -251,10 +263,10 @@ export function System() {
                     </td>
                     <td className="border border-slate-300 font-normal px-4">
                       {user.status === 2
-                        ? "مرخصی"
+                        ? 'مرخصی'
                         : user.status === 3
-                        ? "غیبت"
-                        : "حاضر"}
+                        ? 'غیبت'
+                        : 'حاضر'}
                     </td>
                     <td className="border border-slate-300 px-4 py-2 items-center content-center">
                       <TooltipProvider>
@@ -311,5 +323,5 @@ export function System() {
         </table>
       </div>
     </div>
-  );
+  )
 }

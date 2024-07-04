@@ -3,14 +3,14 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../components/shadcn/tooltip";
+} from '../components/shadcn/tooltip'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../components/shadcn/dialog";
+} from '../components/shadcn/dialog'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,12 +20,32 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "../components/shadcn/alert-dialog";
-import { Eye, Trash } from "lucide-react";
-import { UserForm } from "./user-form";
-import { Button } from "../components/button";
+} from '../components/shadcn/alert-dialog'
+import { Eye, Trash } from 'lucide-react'
+import { UserForm } from './user-form'
+import { Button } from '../components/button'
+import axios from 'axios'
+import { BASE_URL } from '../constants/config'
+import toast from 'react-hot-toast'
 
 export function User({ user }) {
+  function deleteUser() {
+    axios
+      .delete(`${BASE_URL}/user/${user?.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      })
+      .then((data) => {
+        console.log(data)
+        toast.success('کاربر با موفقیت حذف شد.')
+      })
+      .catch((error) => {
+        if (error.message === 'Network Error')
+          toast.error('مشکلی در اتصال به اینترنت پیش آمده.')
+      })
+      .finally()
+  }
   return (
     <tr>
       <td className="border border-slate-300 font-normal px-4">{user.name}</td>
@@ -85,12 +105,14 @@ export function User({ user }) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>خیر</AlertDialogCancel>
-                <AlertDialogAction>بله</AlertDialogAction>
+                <AlertDialogAction onClick={() => deleteUser()}>
+                  بله
+                </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
       </td>
     </tr>
-  );
+  )
 }

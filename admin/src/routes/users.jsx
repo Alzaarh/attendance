@@ -24,7 +24,7 @@ import { useNavigate } from 'react-router-dom'
 export function Users() {
   const [isLoading, setIsLoading] = useState(false)
   const [users, setUsers] = useState([])
-  const navigate=useNavigate()
+  const navigate = useNavigate()
   useEffect(() => {
     setIsLoading(true)
     axios
@@ -37,7 +37,7 @@ export function Users() {
         setUsers(data.data.data)
       })
       .catch((e) => {
-        if(e.response.status === 401){
+        if (e.response.status === 401) {
           navigate('/login')
         }
       })
