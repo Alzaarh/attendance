@@ -49,7 +49,7 @@ export function Users() {
           </div>
         </div>
       ) : (
-        <div className="rounded-xl">
+        <div>
           <div className="flex justify-end my-3">
             <Dialog>
               <DialogTrigger>

@@ -1,28 +1,49 @@
-import { LogOut } from "lucide-react";
-import { useContext } from "react";
-import { NavLink, Outlet } from "react-router-dom";
-import { Button } from "../components/button";
+import { LogOut } from 'lucide-react'
+import { useContext } from 'react'
+import { NavLink, Outlet } from 'react-router-dom'
+import { Button } from '../components/button'
 
-import { AuthContext } from "../stores/auth-context";
+import { AuthContext } from '../stores/auth-context'
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../components/shadcn/tooltip";
+} from '../components/shadcn/tooltip'
+import { cn } from '../lib/utils'
 
 export function Dashboard() {
-  const { setIsLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn } = useContext(AuthContext)
 
   return (
     <>
       <nav className="navbar">
         <ul>
           <li>
-            <NavLink to="/dashboard/user">کاربران</NavLink>
+            <NavLink
+              to="/dashboard/user"
+              className={({ isActive }) =>
+                cn(
+                  'px-4 py-2 hover:text-gray-900 hover:bg-gray-100   rounded-md ',
+                  isActive && 'bg-black text-white '
+                )
+              }
+            >
+              کاربران
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/dashboard/system">حضور و غیاب</NavLink>
+            <NavLink
+              to="/dashboard/system"
+              className={({ isActive }) =>
+                cn(
+                  'px-4 py-2 -mr-14 hover:text-gray-900 hover:bg-gray-100  rounded-md',
+                  isActive && 'bg-black text-white  '
+                )
+              }
+            >
+              حضور و غیاب
+            </NavLink>
           </li>
           <li>
             <TooltipProvider>
@@ -46,5 +67,5 @@ export function Dashboard() {
       </nav>
       <Outlet />
     </>
-  );
+  )
 }

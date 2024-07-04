@@ -30,9 +30,9 @@ a {
   color: inherit;
   padding: 1rem;
 }
-a:hover {
+/* a:hover {
   color: #415a77;
-}
+} */
 
 .label {
   font-size: 0.8rem;
