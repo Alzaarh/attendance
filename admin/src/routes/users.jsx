@@ -1,5 +1,5 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 // import {
 //   Tooltip,
 //   TooltipContent,
@@ -12,28 +12,37 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../components/shadcn/dialog";
-import { Skeleton } from "../components/shadcn/skeleton";
-import { BASE_URL } from "../constants/config";
-import { User } from "./user";
-import { Button } from "../components/button";
-import { Plus } from "lucide-react";
-import { UserForm } from "./user-form";
+} from '../components/shadcn/dialog'
+import { Skeleton } from '../components/shadcn/skeleton'
+import { BASE_URL } from '../constants/config'
+import { User } from './user'
+import { Button } from '../components/button'
+import { Plus } from 'lucide-react'
+import { UserForm } from './user-form'
+import { useNavigate } from 'react-router-dom'
 
 export function Users() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [users, setUsers] = useState([]);
-
+  const [isLoading, setIsLoading] = useState(false)
+  const [users, setUsers] = useState([])
+  const navigate=useNavigate()
   useEffect(() => {
-    setIsLoading(true);
+    setIsLoading(true)
     axios
-      .get(`${BASE_URL}/user`)
-      .then((data) => {
-        setUsers(data.data.data);
+      .get(`${BASE_URL}/user`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
-      .catch((e) => console.error(e))
-      .finally(() => setIsLoading(false));
-  }, []);
+      .then((data) => {
+        setUsers(data.data.data)
+      })
+      .catch((e) => {
+        if(e.response.status === 401){
+          navigate('/login')
+        }
+      })
+      .finally(() => setIsLoading(false))
+  }, [])
 
   return (
     <div className="mx-auto max-w-screen-lg mt-14">
@@ -88,5 +97,5 @@ export function Users() {
         </div>
       )}
     </div>
-  );
+  )
 }

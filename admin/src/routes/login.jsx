@@ -6,9 +6,8 @@ import { Button } from '../components/button'
 import { Input } from '../components/input'
 import { Label } from '../components/label'
 import { AuthContext } from '../stores/auth-context'
-
-const USERNAME = 'admin'
-const PASSWORD = '12345'
+import axios from 'axios'
+import { BASE_URL } from '../constants/config'
 
 export function Login() {
   const { setIsLoggedIn } = useContext(AuthContext)
@@ -20,10 +19,27 @@ export function Login() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    if (username === USERNAME && password === PASSWORD) {
-      setIsLoggedIn(true)
-      navigate('/dashboard/user')
-    } else toast('نام کاربری یا رمز عبور اشتباه است.')
+    axios
+      .post(`${BASE_URL}/auth/admin/login`, {
+        username,
+        password,
+      })
+      .then((data) => {
+        console.log(data)
+        setIsLoggedIn(true)
+        localStorage.setItem('token', data.data.data)
+        toast.success('ورود با موفقیت انجام شد.')
+        setTimeout(() => {
+          navigate('/dashboard/user')
+        }, 1000)
+      })
+      .catch((error) => {
+        if (error.message === 'Network Error')
+          toast.error('مشکلی در اتصال به اینترنت پیش آمده.')
+        else toast.error('نام کاربری یا رمز عبور اشتباه است.')
+      })
+      .finally()
+    
   }
 
   return (
@@ -50,8 +66,8 @@ export function Login() {
         <Button type="submit">ورود</Button>
       </form>
       <Toaster
-        position="bottom-right"
-        toastOptions={{ style: { background: '#e63946', color: '#fff' } }}
+        position="top-left"
+        toastOptions={{ style: { color: '#000' } }}
       />
     </div>
   )

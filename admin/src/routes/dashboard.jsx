@@ -1,6 +1,6 @@
 import { LogOut } from 'lucide-react'
-import { useContext } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { useContext} from 'react'
+import { NavLink, Outlet, useNavigate } from 'react-router-dom'
 import { Button } from '../components/button'
 
 import { AuthContext } from '../stores/auth-context'
@@ -14,6 +14,14 @@ import { cn } from '../lib/utils'
 
 export function Dashboard() {
   const { setIsLoggedIn } = useContext(AuthContext)
+
+  const navigate = useNavigate()
+
+  function handleLogOut() {
+    setIsLoggedIn(false)
+    localStorage.removeItem('token')
+    navigate('/login')
+  }
 
   return (
     <>
@@ -52,7 +60,7 @@ export function Dashboard() {
                   <Button
                     variant="icon"
                     className="bg-white text-black hover:bg-black/5"
-                    onClick={() => setIsLoggedIn(false)}
+                    onClick={() => handleLogOut()}
                   >
                     <LogOut />
                   </Button>
