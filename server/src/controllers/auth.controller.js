@@ -4,6 +4,9 @@ import { asyncHandle } from '../utils/async-handler.js'
 import { pool } from '../utils/db.js'
 import { sign } from '../utils/jwt.js'
 
+const ADMIN_USERNAME = 'admin'
+const ADMIN_PASSWORD = '12345'
+
 export const userLogin = asyncHandle(async (req, res) => {
   const user = await pool.query(
     `
@@ -13,7 +16,10 @@ export const userLogin = asyncHandle(async (req, res) => {
     `,
     [req.body.username]
   )
-  if (user.rowCount === 0 || !(await compare(req.body.password, user.rows[0].password)))
+  if (
+    user.rowCount === 0 ||
+    !(await compare(req.body.password, user.rows[0].password))
+  )
     return res.status(400).send({ error: 'نام کاربری یا رمز عبور اشتباه است.' })
   const userDays = await pool.query(
     `
@@ -30,7 +36,22 @@ export const userLogin = asyncHandle(async (req, res) => {
   res.send({
     data: {
       token,
-      status: userDays.rowCount === 0 ? 1 : userDays.rows.slice(-1)[0].status === 1 ? 2 : 1,
+      status:
+        userDays.rowCount === 0
+          ? 1
+          : userDays.rows.slice(-1)[0].status === 1
+          ? 2
+          : 1,
     },
   })
+})
+
+export const adminLogin = asyncHandle(async (req, res) => {
+  if (
+    req.body.username !== ADMIN_USERNAME ||
+    req.body.password !== ADMIN_PASSWORD
+  )
+    return res.status(400).send({ error: 'نام کاربری یا رمز عبور اشتباه است.' })
+  const token = await sign({ admin: true })
+  return res.send({ data: token })
 })

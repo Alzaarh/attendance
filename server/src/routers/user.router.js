@@ -1,7 +1,13 @@
 import { Router } from 'express'
 import { body } from 'express-validator'
 
-import { create, destroy, find, update } from '../controllers/user.controller.js'
+import {
+  create,
+  destroy,
+  find,
+  update,
+} from '../controllers/user.controller.js'
+import { protectAdmin } from '../middlewares/auth.middleware.js'
 import { validate } from '../middlewares/validate.middleware.js'
 
 export const router = Router()
