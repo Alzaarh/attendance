@@ -19,7 +19,9 @@ import moment from "moment-jalaali";
 export function System() {
   const [isLoading, setIsLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(
+    moment().subtract(1, "days").format("jYYYY/jMM/jDD")
+  );
 
   function convertToHourMinuteFormat(minutes) {
     const hours = Math.floor(minutes / 60);
@@ -27,7 +29,7 @@ export function System() {
     const formattedTime = `${hours}:${mins.toString().padStart(2, "0")}:00`;
     return formattedTime;
   }
-  
+
   function getUser() {
     setIsLoading(true);
     axios
@@ -60,8 +62,11 @@ export function System() {
         <p>انتخاب تاریخ: </p>
         <DatePicker
           value={date}
-          onChange={(value) => setDate(`${value.year}-${value.month}-${value.day}`)}
+          onChange={(value) =>
+            setDate(`${value.year}-${value.month}-${value.day}`)
+          }
           calendar={persian}
+          maxDate={moment().subtract(1, "days").format("jYYYY/jMM/jDD")}
           locale={persian_fa}
           render={
             <InputIcon

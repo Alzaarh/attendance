@@ -79,7 +79,7 @@ export function Users() {
                   <td className="border border-slate-300 font-normal px-4">
                     {user.username}
                   </td>
-                  <td className="border border-slate-300 font-normal px-4">
+                  <td className="border border-slate-300 font-normal px-4 py-2">
                     <div className="flex gap-2">
                       <Dialog>
                         <DialogTrigger>
