@@ -10,14 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-alert-dialog": "^1.1.1",
+    "@radix-ui/react-dialog": "^1.1.1",
+    "@radix-ui/react-tooltip": "^1.1.2",
     "axios": "^1.7.2",
     "clsx": "^2.1.1",
     "localforage": "^1.10.0",
     "lucide-react": "^0.399.0",
     "match-sorter": "^6.3.4",
+    "moment-jalaali": "^0.10.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
+    "react-multi-date-picker": "^4.5.2",
     "react-router-dom": "^6.23.1",
     "sort-by": "^1.2.0",
     "tailwind-merge": "^2.3.0"
