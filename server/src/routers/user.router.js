@@ -12,10 +12,11 @@ import { validate } from '../middlewares/validate.middleware.js'
 
 export const router = Router()
 
-router.get('/', find)
+router.get('/', protectAdmin, find)
 
 router.post(
   '/',
+  protectAdmin,
   [
     body('username').isString().notEmpty(),
     body('name').isString().notEmpty(),
@@ -29,6 +30,7 @@ router.post(
 
 router.put(
   '/:id',
+  protectAdmin,
   [
     body('username').isString().notEmpty(),
     body('name').isString().notEmpty(),
@@ -40,4 +42,4 @@ router.put(
   update
 )
 
-router.delete('/:id', destroy)
+router.delete('/:id', protectAdmin, destroy)
