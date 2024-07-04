@@ -14,13 +14,24 @@ router.post(
     body('username').isString().notEmpty(),
     body('name').isString().notEmpty(),
     body('password').isString().notEmpty(),
-    body('startHour').isString().optional(),
-    body('endHour').isString().optional(),
+    body('startHour').isString().notEmpty(),
+    body('endHour').isString().notEmpty(),
     validate,
   ],
   create
 )
 
-router.patch('/:id', update)
+router.put(
+  '/:id',
+  [
+    body('username').isString().notEmpty(),
+    body('name').isString().notEmpty(),
+    body('password').isString().optional(),
+    body('startHour').isString().notEmpty(),
+    body('endHour').isString().notEmpty(),
+    validate,
+  ],
+  update
+)
 
 router.delete('/:id', destroy)

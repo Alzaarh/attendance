@@ -25,18 +25,25 @@ export const create = asyncHandle(async (req, res) => {
 })
 
 export const update = asyncHandle(async (req, res) => {
-  if (req.body.password) {
-    await pool.query('UPDATE users SET password = $1 WHERE id = $2', [
-      await hash(req.body.password, 12),
-      req.params.id,
-    ])
-  } else {
-    await pool.query('UPDATE users SET username = $1, name = $2 WHERE id = $3', [
-      req.body.username,
-      req.body.name,
-      req.params.id,
-    ])
-  }
+  const user = await pool.query(
+    `
+    SELECT password 
+    FROM users
+    WHERE id = $1
+    `,
+    [req.params.id]
+  )
+  if (user.rowCount === 0) return res.status(404).send({ error: 'کاربری یافت نشد.' })
+  let hashed = user.rows[0].password
+  if (req.body.password) hashed = await hash(req.body.password, 12)
+  await pool.query(
+    `
+    UPDATE users 
+    SET username = $1, name = $2, password = $3, starthour = $4, endhour = $5 
+    WHERE id = $6
+    `,
+    [req.body.username, req.body.name, hashed, req.body.startHour, req.body.endHour, req.params.id]
+  )
   res.send({ data: 'Success' })
 })
 
