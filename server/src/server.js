@@ -30,7 +30,7 @@ pool
         CREATE TABLE IF NOT EXISTS user_day_details (
         id UUID DEFAULT gen_random_uuid(),
         start_hour TIME NOT NULL,
-        end_hour TIME NOT NULL,
+        end_hour TIME,
         status INT NOT NULL,
         day_id UUID NOT NULL REFERENCES user_days(id) ON DELETE CASCADE,
         PRIMARY KEY (id)

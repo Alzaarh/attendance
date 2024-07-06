@@ -21,9 +21,23 @@ export const userLogin = asyncHandle(async (req, res) => {
     !(await compare(req.body.password, user.rows[0].password))
   )
     return res.status(400).send({ error: 'نام کاربری یا رمز عبور اشتباه است.' })
+  const userDays = await pool.query(
+    `
+    SELECT start_hour, end_hour, status
+    FROM user_days
+    INNER JOIN user_day_details ON user_days.id = user_day_details.day_id
+    WHERE user_days.date = $1
+    `,
+    [new Date()]
+  )
+  let enter = true
+  let absent = false
+  if (userDays.rows.find((userDay) => userDay.status === 1)?.end_hour)
+    return res.status(400).send({ error: 'عملیات امکان پذیر نمی باشد.' })
+  if (userDays.rows.find((userDay) => userDay.status === 1)) enter = false
   const token = await sign({ user: { id: user.rows[0].id } })
   res.send({
-    data: { token, name: user.rows[0].name },
+    data: { token, name: user.rows[0].name, enter, absent },
   })
 })
 

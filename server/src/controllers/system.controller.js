@@ -27,7 +27,9 @@ export const find = asyncHandle(async (req, res) => {
         .diff(moment(userDay.date).add(userDay.starthour, 'hours'))
       diff += moment(userDay.date)
         .add(
-          userDays.rows.filter((d) => d.id === userDay.id && d.event === 2).sort()[0].hour,
+          userDays.rows
+            .filter((d) => d.id === userDay.id && d.event === 2)
+            .sort()[0].hour,
           'hours'
         )
         .diff(moment(userDay.date).add(userDay.endhour, 'hours'))
@@ -39,7 +41,9 @@ export const find = asyncHandle(async (req, res) => {
           .filter((d) => d.id === userDay.id && d.event === 1)
           .sort()
           .slice(-1)[0].hour,
-        checkOut: userDays.rows.filter((d) => d.id === userDay.id && d.event === 2).sort()[0].hour,
+        checkOut: userDays.rows
+          .filter((d) => d.id === userDay.id && d.event === 2)
+          .sort()[0].hour,
         absent: diff / 1000 / 60,
       })
     }
@@ -48,56 +52,50 @@ export const find = asyncHandle(async (req, res) => {
 })
 
 export const checkIn = asyncHandle(async (req, res) => {
-  const userDay = await pool.query('SELECT id FROM user_days WHERE user_id = $1 AND date = $2', [
-    req.user.id,
-    new Date(),
-  ])
-  if (userDay.rowCount === 0) {
-    const newUserDay = await pool.query(
-      'INSERT INTO user_days (date,status,user_id) VALUES ($1,$2,$3) RETURNING id',
-      [new Date(), 1, req.user.id]
-    )
-    await pool.query('INSERT INTO user_day_details (hour,event,day_id) VALUES ($1,$2,$3)', [
+  const userDay = await pool.query(
+    `
+      INSERT INTO user_days 
+      (date, user_id) 
+      VALUES ($1, $2) 
+      RETURNING id
+      `,
+    [new Date(), req.user.id]
+  )
+  await pool.query(
+    `
+      INSERT INTO user_day_details 
+      (start_hour, end_hour, status, day_id) 
+      VALUES ($1, $2, $3, $4)
+      `,
+    [
       `${new Date().getHours()}:${new Date().getMinutes()}`,
-      1,
-      newUserDay.rows[0].id,
-    ])
-  } else {
-    const userDayDetails = await pool.query(
-      'SELECT id,hour,event FROM user_day_details WHERE day_id=$1 ORDER BY hour ASC',
-      [userDay.rows[0].id]
-    )
-    if (userDayDetails.rowCount >= 4)
-      return res.status(403).send({ error: 'عملیات امکان پذیر نمی باشد.' })
-    if (userDayDetails.rows[userDayDetails.rowCount - 1].event === 1)
-      return res.status(403).send({ error: 'عملیات امکان پذیر نمی باشد.' })
-    await pool.query('INSERT INTO user_day_details (hour,event,day_id) VALUES ($1,$2,$3)', [
-      `${new Date().getHours()}:${new Date().getMinutes()}`,
+      null,
       1,
       userDay.rows[0].id,
-    ])
-  }
-  res.send({ data: 'Success' })
+    ]
+  )
+  res.status(201).send({ data: 'Success' })
 })
 
 export const checkOut = asyncHandle(async (req, res) => {
-  const userDay = await pool.query('SELECT id FROM user_days WHERE user_id = $1 AND date = $2', [
-    req.user.id,
-    new Date(),
-  ])
-  if (userDay.rowCount === 0) return res.status(403).send({ error: 'عملیات امکان پذیر نمی باشد.' })
-  const userDayDetails = await pool.query(
-    'SELECT id,hour,event FROM user_day_details WHERE day_id=$1 ORDER BY hour ASC',
-    [userDay.rows[0].id]
+  const userDay = await pool.query(
+    `
+      SELECT id FROM user_days 
+      WHERE date = $1 AND user_id = $2
+      `,
+    [new Date(), req.user.id]
   )
-  if (userDayDetails.rowCount >= 4)
-    return res.status(403).send({ error: 'عملیات امکان پذیر نمی باشد.' })
-  if (userDayDetails.rows[userDayDetails.rowCount - 1].event === 2)
-    return res.status(403).send({ error: 'عملیات امکان پذیر نمی باشد.' })
-  await pool.query('INSERT INTO user_day_details (hour,event,day_id) VALUES ($1,$2,$3)', [
-    `${new Date().getHours()}:${new Date().getMinutes()}`,
-    2,
-    userDay.rows[0].id,
-  ])
-  res.send({ data: 'Success' })
+  await pool.query(
+    `
+      UPDATE user_day_details 
+      SET end_hour = $1
+      WHERE day_id = $2 AND status = $3
+      `,
+    [
+      `${new Date().getHours()}:${new Date().getMinutes()}`,
+      userDay.rows[0].id,
+      1,
+    ]
+  )
+  res.status(201).send({ data: 'Success' })
 })

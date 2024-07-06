@@ -100,7 +100,7 @@ input::-webkit-inner-spin-button {
   visibility: hidden;
 }
 
-.login svg {
+button svg {
   animation-name: spin;
   animation-duration: 1000ms;
   animation-iteration-count: infinite;
@@ -116,6 +116,7 @@ input::-webkit-inner-spin-button {
 
 .employee-btn {
   display: flex;
+  gap: 1rem;
   justify-content: center;
   margin-top: 3rem;
 }
