@@ -2,7 +2,7 @@ const path = require('node:path')
 
 const { app, BrowserWindow, ipcMain } = require('electron')
 
-const { createDatabase } = require('./helpers/database')
+// const { createDatabase } = require('./helpers/database')
 const { login, enter, exit } = require('./handlers/user')
 
 const createWindow = () => {
@@ -14,10 +14,8 @@ const createWindow = () => {
   window.loadFile('views/login.html')
 }
 
-createDatabase()
-  .then(() => {
-    return app.whenReady()
-  })
+app
+  .whenReady()
   .then(() => {
     ipcMain.handle('user:login', login)
     ipcMain.handle('user:enter', enter)
