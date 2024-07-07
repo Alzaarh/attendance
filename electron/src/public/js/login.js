@@ -24,7 +24,7 @@ document.getElementById('form').addEventListener('submit', async (event) => {
         username: username.value,
         password: password.value,
       })
-      .then(({ error: msg, token, name, enter, absent }) => {
+      .then(({ error: msg, token, name, enter, absent, absentFull }) => {
         if (msg) {
           error.style.visibility = 'visible'
           error.innerText = msg
@@ -32,7 +32,10 @@ document.getElementById('form').addEventListener('submit', async (event) => {
           submitButton.classList.remove('disabled')
           submitButton.disabled = false
         } else {
-          window.localStorage.setItem('user', JSON.stringify({ token, name, enter, absent }))
+          window.localStorage.setItem(
+            'user',
+            JSON.stringify({ token, name, enter, absent, absentFull })
+          )
           window.location.href = './dashboard.html'
         }
       })

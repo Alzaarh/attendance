@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "server-dev": "cd server && npm run dev"
+    "server-dev": "cd server && npm run dev",
+    "electron": "cd electron && npm start"
   },
   "keywords": [],
   "author": "",

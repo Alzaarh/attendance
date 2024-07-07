@@ -54,10 +54,8 @@ export const find = asyncHandle(async (req, res) => {
 export const checkIn = asyncHandle(async (req, res) => {
   const userDay = await pool.query(
     `
-      INSERT INTO user_days 
-      (date, user_id) 
-      VALUES ($1, $2) 
-      RETURNING id
+      SELECT id FROM user_days 
+      WHERE date = $1 AND user_id = $2
       `,
     [new Date(), req.user.id]
   )
@@ -95,6 +93,53 @@ export const checkOut = asyncHandle(async (req, res) => {
       `${new Date().getHours()}:${new Date().getMinutes()}`,
       userDay.rows[0].id,
       1,
+    ]
+  )
+  res.status(201).send({ data: 'Success' })
+})
+
+export const startLeave = asyncHandle(async (req, res) => {
+  const userDay = await pool.query(
+    `
+    SELECT id FROM user_days 
+    WHERE date = $1 AND user_id = $2
+    `,
+    [new Date(), req.user.id]
+  )
+  await pool.query(
+    `
+      INSERT INTO user_day_details 
+      (start_hour, end_hour, status, day_id) 
+      VALUES ($1, $2, $3, $4)
+      `,
+    [
+      `${new Date().getHours()}:${new Date().getMinutes()}`,
+      null,
+      2,
+      userDay.rows[0].id,
+    ]
+  )
+  res.status(201).send({ data: 'Success' })
+})
+
+export const endLeave = asyncHandle(async (req, res) => {
+  const userDay = await pool.query(
+    `
+      SELECT id FROM user_days 
+      WHERE date = $1 AND user_id = $2
+      `,
+    [new Date(), req.user.id]
+  )
+  await pool.query(
+    `
+      UPDATE user_day_details 
+      SET end_hour = $1
+      WHERE day_id = $2 AND status = $3
+      `,
+    [
+      `${new Date().getHours()}:${new Date().getMinutes()}`,
+      userDay.rows[0].id,
+      2,
     ]
   )
   res.status(201).send({ data: 'Success' })

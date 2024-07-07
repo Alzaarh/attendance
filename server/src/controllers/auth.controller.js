@@ -32,12 +32,16 @@ export const userLogin = asyncHandle(async (req, res) => {
   )
   let enter = true
   let absent = false
+  let absentFull = false
   if (userDays.rows.find((userDay) => userDay.status === 1)?.end_hour)
     return res.status(400).send({ error: 'عملیات امکان پذیر نمی باشد.' })
   if (userDays.rows.find((userDay) => userDay.status === 1)) enter = false
+  if (userDays.rows.find((userDay) => userDay.status === 2)) absent = true
+  if (userDays.rows.find((userDay) => userDay.status === 2)?.end_hour)
+    absentFull = true
   const token = await sign({ user: { id: user.rows[0].id } })
   res.send({
-    data: { token, name: user.rows[0].name, enter, absent },
+    data: { token, name: user.rows[0].name, enter, absent, absentFull },
   })
 })
 

@@ -12,6 +12,10 @@ checkInButton.innerText = user.enter ? 'ورود' : 'خروج'
 
 absentButton.innerText = `${!user.absent ? 'شروع' : 'پایان'} مرخصی`
 
+if (user.absent) checkInButton.disabled = true
+
+if (user.absentFull) absentButton.disabled = true
+
 checkInButton.addEventListener('click', () => {
   checkInButton.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" height="28" width="28" viewBox="0 0 512 512">

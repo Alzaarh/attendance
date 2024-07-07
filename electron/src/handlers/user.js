@@ -16,6 +16,7 @@ exports.login = async (_event, data) => {
       name: response.data.data.name,
       enter: response.data.data.enter,
       absent: response.data.data.absent,
+      absentFull: response.data.data.absentFull,
     }
   } catch (error) {
     return { error: error.response.data.error }
