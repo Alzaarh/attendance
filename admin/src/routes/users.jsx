@@ -1,11 +1,5 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-// import {
-//   Tooltip,
-//   TooltipContent,
-//   TooltipProvider,
-//   TooltipTrigger,
-// } from "../components/shadcn/tooltip";
 import {
   Dialog,
   DialogContent,

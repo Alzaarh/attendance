@@ -54,6 +54,19 @@ export function Dashboard() {
             </NavLink>
           </li>
           <li>
+            <NavLink
+              to="/dashboard/report"
+              className={({ isActive }) =>
+                cn(
+                  'px-4 py-2 -mr-14 hover:text-gray-900 hover:bg-gray-100  rounded-md',
+                  isActive && 'bg-black text-white  '
+                )
+              }
+            >
+              گزارش ها
+            </NavLink>
+          </li>
+          <li>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>

@@ -8,6 +8,7 @@ import { Users } from './routes/users.jsx'
 import { Login } from './routes/login.jsx'
 import { System } from './routes/system'
 import ImageNOtFound from './assets/image/notFound.jpg'
+import { Report } from './routes/report.jsx'
 
 export function Parent() {
   localStorage.getItem('token')
@@ -27,6 +28,7 @@ const router = createBrowserRouter([
         children: [
           { path: 'user', element: <Users /> },
           { path: 'system', element: <System /> },
+          { path: 'report', element: <Report /> },
         ],
       },
     ],
