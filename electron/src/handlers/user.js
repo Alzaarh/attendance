@@ -46,3 +46,27 @@ exports.exit = async (_event, token) => {
     return { error: error.response.data.error }
   }
 }
+
+exports.startLeave = async (_event, token) => {
+  try {
+    await axios.post(
+      `${BASE_URL}/system/start-leave`,
+      {},
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+  } catch (error) {
+    return { error: error.response.data.error }
+  }
+}
+
+exports.endLeave = async (_event, token) => {
+  try {
+    await axios.post(
+      `${BASE_URL}/system/end-leave`,
+      {},
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+  } catch (error) {
+    return { error: error.response.data.error }
+  }
+}

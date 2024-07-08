@@ -6,7 +6,9 @@ import {
   endLeave,
   find,
   startLeave,
-  update,
+  updateAbsent,
+  updateCheckIn,
+  updateLeave,
 } from '../controllers/system.controller.js'
 import { protectAdmin, protectUser } from '../middlewares/auth.middleware.js'
 
@@ -22,4 +24,8 @@ router.post('/start-leave', protectUser, startLeave)
 
 router.post('/end-leave', protectUser, endLeave)
 
-router.patch('/:id', protectAdmin, update)
+router.put('/:id/check-in', protectAdmin, updateCheckIn)
+
+router.put('/:id/leave', protectAdmin, updateLeave)
+
+router.put('/:id/absent', protectAdmin, updateAbsent)

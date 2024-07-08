@@ -3,7 +3,7 @@ const path = require('node:path')
 const { app, BrowserWindow, ipcMain } = require('electron')
 
 // const { createDatabase } = require('./helpers/database')
-const { login, enter, exit } = require('./handlers/user')
+const { login, enter, exit, startLeave, endLeave } = require('./handlers/user')
 
 const createWindow = () => {
   const window = new BrowserWindow({
@@ -20,6 +20,8 @@ app
     ipcMain.handle('user:login', login)
     ipcMain.handle('user:enter', enter)
     ipcMain.handle('user:exit', exit)
+    ipcMain.handle('user:startLeave', startLeave)
+    ipcMain.handle('user:endLeave', endLeave)
     ipcMain.on('quit', () =>
       setTimeout(() => {
         app.exit()
