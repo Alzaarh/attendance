@@ -5,6 +5,7 @@ import {
   checkOut,
   endLeave,
   find,
+  getExcelForOne,
   startLeave,
   updateAbsent,
   updateCheckIn,
@@ -15,6 +16,8 @@ import { protectAdmin, protectUser } from '../middlewares/auth.middleware.js'
 export const router = Router()
 
 router.get('/', protectAdmin, find)
+
+router.get('/excel', protectAdmin, getExcelForOne)
 
 router.post('/check-in', protectUser, checkIn)
 

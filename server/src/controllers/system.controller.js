@@ -173,9 +173,10 @@ export const updateAbsent = asyncHandle(async (req, res) => {
   res.send({ data: 'Success' })
 })
 
-export const getExcel = asyncHandle(async (req, res) => {
-  await pool.query(
-    'SELECT * FROM user_days INNER JOIN users ON users.id = user_days.user_id INNER JOIN user_day_details ON user_days.id = user_day_details.day_id WHERE date BETWEEN $1 AND $2',
-    [req.query.startDate, req.query.endDate]
+export const getExcelForOne = asyncHandle(async (req, res) => {
+  const userDays = await pool.query(
+    'SELECT users.name, date, start_hour, end_hour, status FROM user_days INNER JOIN users ON users.id = user_days.user_id INNER JOIN user_day_details ON user_days.id = user_day_details.day_id WHERE date BETWEEN $1 AND $2 AND users.id = $3 ORDER BY date ASC',
+    [req.query.startDate, req.query.endDate, req.query.userId]
   )
+  res.send({ data: userDays.rows })
 })
