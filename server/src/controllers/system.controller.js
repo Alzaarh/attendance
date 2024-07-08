@@ -5,50 +5,10 @@ import { pool } from '../utils/db.js'
 
 export const find = asyncHandle(async (req, res) => {
   const userDays = await pool.query(
-    `SELECT user_days.id,status,date,name,hour,event,startHour,endHour 
-    FROM user_days 
-    INNER JOIN users ON users.id=user_days.user_id 
-    INNER JOIN user_day_details ON user_days.id=user_day_details.day_id 
-    WHERE date=$1`,
-    [req.query.date ?? new Date()]
+    'SELECT user_days.id, name, start_hour, end_hour, status FROM user_days INNER JOIN users ON users.id = user_days.user_id INNER JOIN user_day_details ON user_days.id = user_day_details.day_id WHERE date = $1',
+    [req.query.date]
   )
-  const response = []
-  userDays.rows.forEach((userDay) => {
-    let diff = 0
-    if (!response.find((d) => d.id === userDay.id)) {
-      diff += moment(userDay.date)
-        .add(
-          userDays.rows
-            .filter((d) => d.id === userDay.id && d.event === 1)
-            .sort()
-            .slice(-1)[0].hour,
-          'hours'
-        )
-        .diff(moment(userDay.date).add(userDay.starthour, 'hours'))
-      diff += moment(userDay.date)
-        .add(
-          userDays.rows
-            .filter((d) => d.id === userDay.id && d.event === 2)
-            .sort()[0].hour,
-          'hours'
-        )
-        .diff(moment(userDay.date).add(userDay.endhour, 'hours'))
-      response.push({
-        id: userDay.id,
-        status: userDay.status,
-        name: userDay.name,
-        checkIn: userDays.rows
-          .filter((d) => d.id === userDay.id && d.event === 1)
-          .sort()
-          .slice(-1)[0].hour,
-        checkOut: userDays.rows
-          .filter((d) => d.id === userDay.id && d.event === 2)
-          .sort()[0].hour,
-        absent: diff / 1000 / 60,
-      })
-    }
-  })
-  res.send({ data: response })
+  res.send({ data: userDays.rows })
 })
 
 export const checkIn = asyncHandle(async (req, res) => {
@@ -143,4 +103,19 @@ export const endLeave = asyncHandle(async (req, res) => {
     ]
   )
   res.status(201).send({ data: 'Success' })
+})
+
+export const update = asyncHandle(async (req, res) => {
+  await pool.query(
+    'UPDATE user_day_details SET start_hour = $1, end_hour = $2 WHERE id = $3',
+    [req.body.startHour, req.body.endHour, req.params.id]
+  )
+  res.send({ data: 'Success' })
+})
+
+export const getExcel = asyncHandle(async (req, res) => {
+  await pool.query(
+    'SELECT * FROM user_days INNER JOIN users ON users.id = user_days.user_id INNER JOIN user_day_details ON user_days.id = user_day_details.day_id WHERE date BETWEEN $1 AND $2',
+    [req.query.startDate, req.query.endDate]
+  )
 })
