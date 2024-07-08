@@ -124,6 +124,13 @@ export const updateCheckIn = asyncHandle(async (req, res) => {
 })
 
 export const updateLeave = asyncHandle(async (req, res) => {
+  if (req.body.startHour === null) {
+    await pool.query(
+      'DELETE FROM user_day_details WHERE day_id = $1 AND status = 2',
+      [req.params.id]
+    )
+    return res.send({ data: 'Success' })
+  }
   const userDayDetail = await pool.query(
     'SELECT id FROM user_day_details WHERE status = 2 AND day_id = $1',
     [req.params.id]
@@ -142,6 +149,13 @@ export const updateLeave = asyncHandle(async (req, res) => {
 })
 
 export const updateAbsent = asyncHandle(async (req, res) => {
+  if (req.body.startHour === null) {
+    await pool.query(
+      'DELETE FROM user_day_details WHERE day_id = $1 AND status = 3',
+      [req.params.id]
+    )
+    return res.send({ data: 'Success' })
+  }
   const userDayDetail = await pool.query(
     'SELECT id FROM user_day_details WHERE status = 3 AND day_id = $1',
     [req.params.id]
