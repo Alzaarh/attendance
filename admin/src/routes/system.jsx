@@ -15,7 +15,7 @@ import persian_fa from 'react-date-object/locales/persian_fa'
 import InputIcon from 'react-multi-date-picker/components/input_icon'
 import { Button } from '../components/button'
 import moment from 'moment-jalaali'
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 
 export function System() {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,7 +24,7 @@ export function System() {
     moment().subtract(1, 'days').format('jYYYY/jMM/jDD')
   )
 
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   function convertToHourMinuteFormat(minutes) {
     const hours = Math.floor(minutes / 60)
@@ -40,6 +40,9 @@ export function System() {
         params: {
           date: moment(date, 'jYYYY-jMM-jDD').format('YYYY-MM-DD'),
         },
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       })
       .then((data) => {
         setUsers(data.data.data)
@@ -49,23 +52,7 @@ export function System() {
   }
 
   useEffect(() => {
-    setIsLoading(true)
-    axios
-      .get(`${BASE_URL}/system`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      .then((data) => {
-        setUsers(data.data.data)
-      })
-      .catch((e) => {
-        if (e.response.status === 401) {
-          navigate('/login')
-        }
-      }
-    )
-      .finally(() => setIsLoading(false))
+    getUser()
   }, [])
 
   return (
@@ -107,14 +94,20 @@ export function System() {
               <th className="border border-slate-300 font-normal p-4 text-right w-36">
                 ساعت ورود
               </th>
-              <th className="border border-slate-300 font-normal p-4 text-right w-36">
+              <th className="border border-slate-300 font-normal p-4 text-right w-32">
                 ساعت خروج
               </th>
-              <th className="border border-slate-300 font-normal p-4 text-right w-36">
-                زمان غیبت
+              <th className="border border-slate-300 font-normal p-4 text-right w-32">
+                شروع مرخصی
               </th>
-              <th className="border border-slate-300 font-normal p-4 text-right w-36">
-                وضعیت
+              <th className="border border-slate-300 font-normal p-4 text-right w-32">
+                پایان مرخصی
+              </th>
+              <th className="border border-slate-300 font-normal p-4 text-right w-32">
+                شروع غیبت
+              </th>
+              <th className="border border-slate-300 font-normal p-4 text-right w-32">
+                پایان غیبت
               </th>
               <th className="border border-slate-300 font-normal p-4 text-right w-32">
                 ثبت وضعیت
@@ -126,13 +119,19 @@ export function System() {
               <>
                 <tr className="h-7">
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-52 px-4" />
-                  </td>
-                  <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-24 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-24 px-4" />
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-20 px-4" />
@@ -146,13 +145,19 @@ export function System() {
                 </tr>
                 <tr className="h-7">
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-52 px-4" />
-                  </td>
-                  <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-24 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-24 px-4" />
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-20 px-4" />
@@ -166,13 +171,19 @@ export function System() {
                 </tr>
                 <tr className="h-7">
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-52 px-4" />
-                  </td>
-                  <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-24 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-24 px-4" />
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-20 px-4" />
@@ -186,13 +197,19 @@ export function System() {
                 </tr>
                 <tr className="h-7">
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-52 px-4" />
-                  </td>
-                  <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-24 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-24 px-4" />
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-20 px-4" />
@@ -206,13 +223,19 @@ export function System() {
                 </tr>
                 <tr className="h-7">
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-52 px-4" />
-                  </td>
-                  <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-24 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-24 px-4" />
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-20 px-4" />
@@ -226,13 +249,19 @@ export function System() {
                 </tr>
                 <tr className="h-7">
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-52 px-4" />
-                  </td>
-                  <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-24 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
-                    <Skeleton className="h-3 w-24 px-4" />
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
+                  </td>
+                  <td className="border border-slate-300 font-normal px-4">
+                    <Skeleton className="h-3 w-20 px-4" />
                   </td>
                   <td className="border border-slate-300 font-normal px-4">
                     <Skeleton className="h-3 w-20 px-4" />
