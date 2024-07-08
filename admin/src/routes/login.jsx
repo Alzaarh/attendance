@@ -8,12 +8,14 @@ import { Label } from '../components/label'
 import { AuthContext } from '../stores/auth-context'
 import axios from 'axios'
 import { BASE_URL } from '../constants/config'
+import { RotateCw } from 'lucide-react'
 
 export function Login() {
   const { setIsLoggedIn } = useContext(AuthContext)
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const navigate = useNavigate()
 
@@ -38,8 +40,7 @@ export function Login() {
           toast.error('مشکلی در اتصال به اینترنت پیش آمده.')
         else toast.error('نام کاربری یا رمز عبور اشتباه است.')
       })
-      .finally()
-    
+      .finally(() => setIsLoading(true))
   }
 
   return (
@@ -63,7 +64,9 @@ export function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Button type="submit">ورود</Button>
+        <Button type="submit" className="flex justify-center">
+          {isLoading ? <RotateCw className="animate-spin" /> : 'ورود'}
+        </Button>
       </form>
       <Toaster
         position="top-left"
@@ -72,4 +75,3 @@ export function Login() {
     </div>
   )
 }
-
