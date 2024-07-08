@@ -13,7 +13,6 @@ import {
 } from '../components/shadcn/dialog'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
@@ -21,15 +20,23 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '../components/shadcn/alert-dialog'
-import { Eye, Trash } from 'lucide-react'
+import { Eye, RotateCw, Trash } from 'lucide-react'
 import { UserForm } from './user-form'
 import { Button } from '../components/button'
 import axios from 'axios'
 import { BASE_URL } from '../constants/config'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export function User({ user }) {
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const navigate = useNavigate()
+
   function deleteUser() {
+    setIsLoading(true)
     axios
       .delete(`${BASE_URL}/user/${user?.id}`, {
         headers: {
@@ -39,12 +46,14 @@ export function User({ user }) {
       .then((data) => {
         console.log(data)
         toast.success('کاربر با موفقیت حذف شد.')
+        setIsOpen(false)
+        navigate(0)
       })
       .catch((error) => {
         if (error.message === 'Network Error')
           toast.error('مشکلی در اتصال به اینترنت پیش آمده.')
       })
-      .finally()
+      .finally(() => setIsLoading(false))
   }
   return (
     <tr>
@@ -54,7 +63,7 @@ export function User({ user }) {
       </td>
       <td className="border border-slate-300 font-normal py-2">
         <div className="flex justify-center">
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger>
               <TooltipProvider>
                 <Tooltip>
@@ -76,10 +85,13 @@ export function User({ user }) {
               <DialogHeader>
                 <DialogTitle>جزئیات کاربر </DialogTitle>
               </DialogHeader>
-              <UserForm userData={user} />
+              <UserForm
+                userData={user}
+                onSuccess={() => setIsDialogOpen(false)}
+              />
             </DialogContent>
           </Dialog>
-          <AlertDialog>
+          <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
             <AlertDialogTrigger>
               <TooltipProvider>
                 <Tooltip>
@@ -105,9 +117,12 @@ export function User({ user }) {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>خیر</AlertDialogCancel>
-                <AlertDialogAction onClick={() => deleteUser()}>
-                  بله
-                </AlertDialogAction>
+                <Button
+                  className="mt-2 bg-primary m-2 rounded-lg px-4 py-1 text-white  sm:mt-0"
+                  onClick={() => deleteUser()}
+                >
+                  {isLoading ? <RotateCw className="animate-spin" /> : 'بله'}
+                </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

@@ -41,7 +41,7 @@ pool
   )
   .then(() => {
     new CronJob(
-      '* * * * *',
+      '0 0 * * *',
       async () => {
         const users = await pool.query('SELECT id FROM users')
         for await (const user of users.rows) {

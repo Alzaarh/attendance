@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom'
 export function Users() {
   const [isLoading, setIsLoading] = useState(false)
   const [users, setUsers] = useState([])
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
   const navigate = useNavigate()
   useEffect(() => {
     setIsLoading(true)
@@ -60,7 +61,7 @@ export function Users() {
       ) : (
         <div>
           <div className="flex justify-end my-3">
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger>
                 <Button className="flex gap-2">
                   افزودن کاربر <Plus />
@@ -70,7 +71,7 @@ export function Users() {
                 <DialogHeader>
                   <DialogTitle>افزودن کاربر </DialogTitle>
                 </DialogHeader>
-                <UserForm />
+                <UserForm onSuccess={() => setIsDialogOpen(false)} />
               </DialogContent>
             </Dialog>
           </div>
