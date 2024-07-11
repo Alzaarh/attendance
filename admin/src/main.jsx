@@ -37,7 +37,20 @@ const router = createBrowserRouter([
     path: '*',
     element: (
       <div className="w-[100vw] h-[100vh] overflow-hidden">
-        <img src={ImageNOtFound} alt="404" />
+        <img src={ImageNOtFound} alt="404" useMap="#map" />
+
+        <map name="map">
+          <area
+            alt="404"
+            title="back"
+            coords="829,741,552,751,420,811,215,960,9,927,4,1061,243,1079,1271,1035,1897,1058,1751,977,1521,948,1395,861,1270,812,1288,783,1115,741,1105,773"
+            shape="poly"
+            className="cursor-pointer h-5 w-4 bg-black"
+            onClick={() => {
+              router.navigate(-1)
+            }}
+          />
+        </map>
       </div>
     ),
   },
