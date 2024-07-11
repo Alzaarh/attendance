@@ -12,8 +12,8 @@ export function UserForm({ userData, onSuccess }) {
   const [name, setName] = useState(userData?.name ?? '')
   const [username, setUsername] = useState(userData?.username ?? '')
   const [password, setPassword] = useState(userData?.password ?? '')
-  const [startHour, setStartHour] = useState(userData?.startHour ?? '')
-  const [endHour, setEndHour] = useState(userData?.endHour ?? '')
+  const [startHour, setStartHour] = useState(userData?.starthour ?? '')
+  const [endHour, setEndHour] = useState(userData?.endhour ?? '')
   const navigate = useNavigate()
 
   const [errors, setErrors] = useState({})
